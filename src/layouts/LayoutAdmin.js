@@ -10,8 +10,6 @@ export default function LayoutAdmin({ routes }) {
   const { Header, Content, Footer } = Layout;
   return (
     <Layout>
-      <h2>Menu Slider</h2>
-
       <Layout>
         <Header>Header...</Header>
         <Content>
