@@ -1,40 +1,39 @@
-import React from 'react'
-import {Route} from 'react-router-dom'
-import { Layout } from 'antd'
+import React from "react";
+import { Route, Switch } from "react-router-dom";
+import { Layout } from "antd";
 
-import "./LayoutAdmin.scss"
+import "./LayoutAdmin.scss";
 
+export default function LayoutAdmin({ routes }) {
+  console.log(routes);
 
-export default function LayoutAdmin({routes}) {
-    console.log(routes);
-    
-    const {Header,Content,Footer} = Layout
-    return (
-        <Layout>
-            <h2>Menu Slider</h2>
-                    
-            <Layout>
-       
-           <Header>Header...</Header> 
-           <Content><LoadRouters routes={routes}/></Content>      
-           <Footer>Nil Armengol</Footer> 
-       
-        </Layout>
-        </Layout>
-    )
+  const { Header, Content, Footer } = Layout;
+  return (
+    <Layout>
+      <h2>Menu Slider</h2>
+
+      <Layout>
+        <Header>Header...</Header>
+        <Content>
+          <LoadRoutes routes={routes} />
+        </Content>
+        <Footer>Nil Armengol</Footer>
+      </Layout>
+    </Layout>
+  );
 }
 
-
-function LoadRouters({routes}) {
- 
-    return routes.map((route,index)=>(
+function LoadRoutes({ routes }) {
+  return (
+    <Switch>
+      {routes.map((route, index) => (
         <Route
-        key={index}
-        path={route.path}
-        exact={route.exact}
-        component={route.component} />
-    )
-    
-)
-    
+          key={index}
+          path={route.path}
+          exact={route.exact}
+          component={route.component}
+        />
+      ))}
+    </Switch>
+  );
 }
