@@ -17,14 +17,12 @@ function App() {
 
 function RouterWithSubRouters(route) {
   return (
-    
-    
     <Route
       path={route.path}
       exact={route.exact}
-      render={(props) => <route.component routes={route.routes} {...props} />}
+      render={props => <route.component routes={route.routes} {...props} />}
     />
-  )
+  );
 }
 
 export default App;
