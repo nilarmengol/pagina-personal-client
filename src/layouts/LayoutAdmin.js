@@ -17,7 +17,7 @@ export default function LayoutAdmin({ routes }) {
     return (
       <Fragment>
         <Route path="/admin/login" component={AdminSignIn} />
-        <Redirect to="admin/login" />
+        <Redirect to="/admin/login" />
       </Fragment>
     );
   }
