@@ -19,6 +19,7 @@ export function emailValidation(inputData) {
   removeClassErrorSuccess(inputData);
 
   const resultValidaton = emailValid.test(value);
+
   if (resultValidaton) {
     inputData.classList.add("success");
     return true;
