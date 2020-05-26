@@ -1,7 +1,11 @@
-import React, { useState, setState } from "react";
+import React, { useState } from "react";
 import "./RegisterForm.scss";
-import { Form, Icon, Input, Button, Checkbox, notification } from "antd";
+import { Form, Input, Button, Checkbox, notification } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import {
+  emailValidation,
+  minLengthValidation
+} from "../../../utils/formValidation";
 
 export default function RegisterForm() {
   const [inputs, setInputs] = useState({
@@ -9,6 +13,13 @@ export default function RegisterForm() {
     password: "",
     repeatPassword: "",
     privacyPolicy: ""
+  });
+
+  const [formValid, setFormValid] = useState({
+    email: false,
+    password: false,
+    repeatPassword: false,
+    privacyPolicy: false
   });
 
   const changeForm = e => {
@@ -26,9 +37,23 @@ export default function RegisterForm() {
     console.log(e.target.value);
   };
 
+  const inputValidation = e => {
+    const { type, name } = e.target;
+
+    if (type === "email") {
+      setFormValid({ ...formValid, [name]: emailValidation(e.target) });
+    }
+    if (type === "password") {
+      setFormValid({ ...formValid, [name]: minLengthValidation(e.target, 6) });
+    }
+    if (type === "checkbox") {
+      setFormValid({ ...formValid, [name]: e.target.checked });
+    }
+  };
+
   const register = e => {
     e.preventDefault();
-    console.log(inputs);
+    console.log("hello");
   };
 
   return (
@@ -41,6 +66,7 @@ export default function RegisterForm() {
           placeholder="Correo electrónico"
           className="register-form__input"
           value={inputs.email}
+          onChange={inputValidation}
         />
       </Form.Item>
       <Form.Item>
@@ -51,6 +77,7 @@ export default function RegisterForm() {
           placeholder="Contraseña"
           className="register-form__input"
           value={inputs.password}
+          onChange={inputValidation}
         />
       </Form.Item>
       <Form.Item>
@@ -61,10 +88,15 @@ export default function RegisterForm() {
           placeholder="Repetir contraseña"
           className="register-form__input"
           value={inputs.repeatPassword}
+          onChange={inputValidation}
         />
       </Form.Item>
       <Form.Item>
-        <Checkbox name="privacyPolicy" checked={inputs.privacyPolicy}>
+        <Checkbox
+          name="privacyPolicy"
+          checked={inputs.privacyPolicy}
+          onChange={inputValidation}
+        >
           He leído y acepto la política de privacidad
         </Checkbox>
       </Form.Item>
