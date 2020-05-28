@@ -13,11 +13,7 @@ export default function LayoutAdmin({ routes }) {
   const [menuCollapsed, setMenuCollapsed] = useState(false);
   const { Header, Content, Footer } = Layout;
   const { user, isLoading } = useAuth();
-
-  const accessToken = getAccessTokenApi();
-  console.log("getAccessToken", accessToken);
-  const refreshToken = getRefreshTokenApi();
-  console.log("refreshToken", refreshToken);
+  console.log(user);
   if (!user) {
     return (
       <Fragment>
