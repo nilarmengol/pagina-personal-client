@@ -7,11 +7,16 @@ import {
   StopOutlined,
   CheckOutlined,
 } from "@ant-design/icons";
+import Modal from "../../../Modal";
+import EditUserForm from "../EditUserForm";
 
 import "./ListUsers.scss";
 
 export default function ListUsers({ usersActive, usersInactive }) {
   const [viewUsersActives, setViewUsersActives] = useState(true);
+  const [isVisibleModal, setIsVisibleModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalContent, setModalContent] = useState(null);
 
   return (
     <div className="list-users">
@@ -25,15 +30,42 @@ export default function ListUsers({ usersActive, usersInactive }) {
         </span>
       </div>
       {viewUsersActives ? (
-        <UsersActive usersActive={usersActive} />
+        <UsersActive
+          usersActive={usersActive}
+          title={modalTitle}
+          setIsVisibleModal={setIsVisibleModal}
+          setModalTitle={setModalTitle}
+          setModalContent={setModalContent}
+        />
       ) : (
         <UsersInactive usersInactive={usersInactive} />
       )}
+      <Modal
+        title={modalTitle}
+        setIsVisible={setIsVisibleModal}
+        isVisible={isVisibleModal}
+      >
+        {modalContent}
+      </Modal>
     </div>
   );
 }
 
-function UsersActive({ usersActive }) {
+function UsersActive({
+  usersActive,
+  setIsVisibleModal,
+  setModalTitle,
+  setModalContent,
+}) {
+  const editUser = (user) => {
+    setIsVisibleModal(true);
+    setModalTitle(
+      `Editar ${user.name ? user.name : "..."} ${
+        user.lastname ? user.lastname : "..."
+      }`
+    );
+    setModalContent(<EditUserForm user={user} />);
+  };
   return (
     <List
       className="users-active"
@@ -42,10 +74,7 @@ function UsersActive({ usersActive }) {
       renderItem={(user) => (
         <List.Item
           actions={[
-            <Button
-              type="primary"
-              onClick={() => console.log("Editar Usuario")}
-            >
+            <Button type="primary" onClick={() => editUser(user)}>
               <EditOutlined />
             </Button>,
             <Button
