@@ -27,7 +27,7 @@ function SignIn() {
             <TabPane tab={<span>Entrar</span>} key="1">
               <LoginForm />
             </TabPane>
-            <TabPane tab={<span>Nuevo Usuario</span>} key="2">
+            <TabPane tab={<span>Entrar</span>} key="2">
               <RegisterForm />
             </TabPane>
           </Tabs>
