@@ -9,17 +9,17 @@ import "./LoginForm.scss";
 export default function LoginForm() {
   const [inputs, setInputs] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
-  const changeForm = e => {
+  const changeForm = (e) => {
     setInputs({
       ...inputs,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const login = async e => {
+  const login = async (e) => {
     const result = await signInApi(inputs);
 
     if (result.message) {
@@ -30,7 +30,7 @@ export default function LoginForm() {
       localStorage.setItem(REFRESH_TOKEN, refreshToken);
 
       notification["success"]({
-        message: "Login correcto"
+        message: "Login correcto",
       });
       window.location.href = "/admin";
     }
