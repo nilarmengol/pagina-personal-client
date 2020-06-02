@@ -5,11 +5,16 @@ import { Button } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PoweroffOutlined,
+  PoweroffOutlined
 } from "@ant-design/icons";
 import NilLogo from "../../../assets/img/png/logo.png";
+import { logout } from "../../../api/auth";
 
 export default function MenuTop({ setMenuCollapsed, menuCollapsed }) {
+  const logOutUser = () => {
+    logout();
+    window.location.reload();
+  };
   return (
     <div className="menu-top">
       <div className="menu-top__left">
@@ -25,7 +30,7 @@ export default function MenuTop({ setMenuCollapsed, menuCollapsed }) {
         </Button>
       </div>
       <div className="menu-top__right">
-        <Button type="link" onClick={() => console.log("Click.")}>
+        <Button type="link" onClick={logOutUser}>
           <PoweroffOutlined />
         </Button>
       </div>
