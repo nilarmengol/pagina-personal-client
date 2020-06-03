@@ -13,7 +13,11 @@ import EditUserForm from "../EditUserForm";
 
 import "./ListUsers.scss";
 
-export default function ListUsers({ usersActive, usersInactive }) {
+export default function ListUsers({
+  usersActive,
+  usersInactive,
+  setReloadUsers
+}) {
   const [viewUsersActives, setViewUsersActives] = useState(true);
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -37,6 +41,7 @@ export default function ListUsers({ usersActive, usersInactive }) {
           setIsVisibleModal={setIsVisibleModal}
           setModalTitle={setModalTitle}
           setModalContent={setModalContent}
+          setReloadUsers={setReloadUsers}
         />
       ) : (
         <UsersInactive usersInactive={usersInactive} />
@@ -56,7 +61,8 @@ function UsersActive({
   usersActive,
   setIsVisibleModal,
   setModalTitle,
-  setModalContent
+  setModalContent,
+  setReloadUsers
 }) {
   const editUser = user => {
     setIsVisibleModal(true);
@@ -65,7 +71,13 @@ function UsersActive({
         user.lastname ? user.lastname : "..."
       }`
     );
-    setModalContent(<EditUserForm user={user} />);
+    setModalContent(
+      <EditUserForm
+        user={user}
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadUsers={setReloadUsers}
+      />
+    );
   };
   return (
     <List

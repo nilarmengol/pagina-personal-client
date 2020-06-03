@@ -94,6 +94,7 @@ export function uploadAvatarApi(token, avatar, userId) {
   formData.append("avatar", avatar, avatar.name);
   const params = {
     method: "PUT",
+    body: formData,
     headers: {
       Authorization: token
     }

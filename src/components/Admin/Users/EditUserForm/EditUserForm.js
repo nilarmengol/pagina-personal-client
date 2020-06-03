@@ -1,12 +1,30 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import noAvatar from "../../../../assets/img/png/user.png";
-import { Avatar, Select, Form, Col, Row, Input, Button } from "antd";
+import {
+  Avatar,
+  Select,
+  Form,
+  Col,
+  Row,
+  Input,
+  Button,
+  notification
+} from "antd";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 import "./EditUserForm.scss";
-import { getAvatarApi } from "../../../../api/user";
+import {
+  getAvatarApi,
+  uploadAvatarApi,
+  updateUserApi
+} from "../../../../api/user";
+import { getAccessTokenApi } from "../../../../api/auth";
 
-export default function EditUserForm({ user }) {
+export default function EditUserForm({
+  user,
+  setIsVisibleModal,
+  setReloadUsers
+}) {
   const [avatar, setAvatar] = useState(null);
   const [userData, setUserData] = useState({});
 
@@ -40,7 +58,44 @@ export default function EditUserForm({ user }) {
   }, [avatar]);
 
   const updateUser = e => {
-    console.log(userData);
+    const token = getAccessTokenApi();
+    let userUpdate = userData;
+
+    if (userUpdate.password || userUpdate.repeatPassword) {
+      if (userUpdate.password !== userUpdate.repeatPassword) {
+        notification["error"]({
+          message: "Las contraseñas tienen que ser iguales"
+        });
+      }
+      return;
+    }
+
+    if (!userUpdate.name || !userUpdate.lastname || !userUpdate.email) {
+      notification["error"]({
+        message: "El nombre, apellidosy email son obligatorios"
+      });
+
+      return;
+    }
+
+    if (typeof userUpdate.avatar === "object") {
+      uploadAvatarApi(token, userUpdate.avatar, user._id).then(response => {
+        userUpdate.avatar = response.avatarName;
+        updateUserApi(token, userUpdate, user._id).then(result => {
+          notification["success"]({
+            message: result.message
+          });
+        });
+      });
+    } else {
+      updateUserApi(token, userUpdate, user._id).then(result => {
+        notification["success"]({
+          message: result.message
+        });
+      });
+    }
+    setIsVisibleModal(false);
+    setReloadUsers(true);
   };
 
   return (
