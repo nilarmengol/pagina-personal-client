@@ -4,25 +4,42 @@ import noAvatar from "../../../../assets/img/png/user.png";
 import { Avatar, Select, Form, Col, Row, Input, Button } from "antd";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 import "./EditUserForm.scss";
+import { getAvatarApi } from "../../../../api/user";
 
 export default function EditUserForm({ user }) {
   const [avatar, setAvatar] = useState(null);
-  const [userData, setUserData] = useState({
-    name: user.name,
-    lastname: user.lastname,
-    email: user.email,
-    role: user.role,
-    avatar: user.avatar,
-  });
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    setUserData({
+      name: user.name,
+      lastname: user.lastname,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  useEffect(() => {
+    if (user.avatar) {
+      getAvatarApi(user.avatar).then(response => {
+        setAvatar(response);
+      });
+    } else {
+      setAvatar(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   useEffect(() => {
     if (avatar) {
-      setUserData({ ...userData, avatar });
+      setUserData({ ...userData, avatar: avatar.file });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [avatar]);
 
-  const updateUser = (e) => {
+  const updateUser = e => {
     console.log(userData);
   };
 
@@ -40,8 +57,22 @@ export default function EditUserForm({ user }) {
 }
 
 function UploadAvatar({ avatar, setAvatar }) {
+  const [avatarUrl, setAvatarUrl] = useState(null);
+
+  useEffect(() => {
+    if (avatar) {
+      if (avatar.preview) {
+        setAvatarUrl(avatar.preview);
+      } else {
+        setAvatarUrl(avatar);
+      }
+    } else {
+      setAvatarUrl(null);
+    }
+  }, [avatar]);
+
   const onDrop = useCallback(
-    (acceptedFiles) => {
+    acceptedFiles => {
       const file = acceptedFiles[0];
       setAvatar({ file, preview: URL.createObjectURL(file) });
     },
@@ -51,7 +82,7 @@ function UploadAvatar({ avatar, setAvatar }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: "image/jpeg, image/png",
     noKeyboard: true,
-    onDrop,
+    onDrop
   });
 
   return (
@@ -60,7 +91,7 @@ function UploadAvatar({ avatar, setAvatar }) {
       {isDragActive ? (
         <Avatar size={150} src={noAvatar} />
       ) : (
-        <Avatar size={150} src={avatar ? avatar.preview : noAvatar} />
+        <Avatar size={150} src={avatarUrl ? avatarUrl : noAvatar} />
       )}
     </div>
   );
@@ -76,10 +107,8 @@ function EditForm({ user, userData, setUserData, updateUser }) {
             <Input
               prefix={<UserOutlined />}
               placeholder="Nombre"
-              defaultValue={userData.name}
-              onChange={(e) =>
-                setUserData({ ...userData, name: e.target.value })
-              }
+              value={userData.name}
+              onChange={e => setUserData({ ...userData, name: e.target.value })}
             />
           </Form.Item>
         </Col>
@@ -88,8 +117,8 @@ function EditForm({ user, userData, setUserData, updateUser }) {
             <Input
               prefix={<UserOutlined />}
               placeholder="Apellidos"
-              defaultValue={userData.lastname}
-              onChange={(e) =>
+              value={userData.lastname}
+              onChange={e =>
                 setUserData({ ...userData, lastname: e.target.value })
               }
             />
@@ -102,8 +131,8 @@ function EditForm({ user, userData, setUserData, updateUser }) {
             <Input
               prefix={<MailOutlined />}
               placeholder="Correo electrónico"
-              defaultValue={userData.email}
-              onChange={(e) =>
+              value={userData.email}
+              onChange={e =>
                 setUserData({ ...userData, email: e.target.value })
               }
             />
@@ -113,8 +142,8 @@ function EditForm({ user, userData, setUserData, updateUser }) {
           <Form.Item>
             <Select
               placeholder="Selección de rol"
-              onChange={(e) => setUserData({ ...userData, role: e })}
-              defaultValue={userData.role}
+              onChange={e => setUserData({ ...userData, role: e })}
+              value={userData.role}
             >
               <Option value="admin">Administrador</Option>
               <Option value="editor">Editor</Option>
@@ -130,7 +159,7 @@ function EditForm({ user, userData, setUserData, updateUser }) {
               prefix={<LockOutlined />}
               type="password"
               placeholder="Contraseña"
-              onChange={(e) =>
+              onChange={e =>
                 setUserData({ ...userData, password: e.target.value })
               }
             />
@@ -142,7 +171,7 @@ function EditForm({ user, userData, setUserData, updateUser }) {
               prefix={<LockOutlined />}
               type="password"
               placeholder="Repetir contraseña"
-              onChange={(e) =>
+              onChange={e =>
                 setUserData({ ...userData, repeatPassword: e.target.value })
               }
             />

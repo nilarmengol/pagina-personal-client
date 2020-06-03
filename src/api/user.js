@@ -110,7 +110,7 @@ export function uploadAvatarApi(token, avatar, userId) {
     });
 }
 
-export function getAvatarName(avatarName) {
+export function getAvatarApi(avatarName) {
   const url = `${basePath}/${apiVersion}/get-avatar/${avatarName}`;
 
   return fetch(url)
@@ -122,7 +122,7 @@ export function getAvatarName(avatarName) {
     });
 }
 
-export function updateUserApi(token, avatar, userId) {
+export function updateUserApi(token, user, userId) {
   const url = `${basePath}/${apiVersion}/update-user/${userId}`;
 
   const params = {
