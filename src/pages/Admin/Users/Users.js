@@ -11,10 +11,10 @@ export default function Users() {
   const token = getAccessTokenApi();
 
   useEffect(() => {
-    getUsersActiveApi(token, true).then((response) => {
+    getUsersActiveApi(token, true).then(response => {
       setUsersActive(response.users);
     });
-    getUsersActiveApi(token, false).then((response) => {
+    getUsersActiveApi(token, false).then(response => {
       setUsersInactive(response.users);
     });
   }, [token]);
