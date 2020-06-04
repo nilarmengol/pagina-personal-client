@@ -29,15 +29,22 @@ export default function EditUserForm({
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
+    console.log("hi");
     setUserData({
+      ...userData,
       name: user.name,
       lastname: user.lastname,
       email: user.email,
       role: user.role,
-      avatar: user.avatar
+      avatar: user.avatar,
+      password: "",
+      repeatPassword: ""
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  console.log(userData);
 
   useEffect(() => {
     if (user.avatar) {
@@ -66,8 +73,10 @@ export default function EditUserForm({
         notification["error"]({
           message: "Las contraseñas tienen que ser iguales"
         });
+        return;
+      } else {
+        delete userUpdate.repeatPassword;
       }
-      return;
     }
 
     if (!userUpdate.name || !userUpdate.lastname || !userUpdate.email) {
@@ -214,6 +223,7 @@ function EditForm({ user, userData, setUserData, updateUser }) {
               prefix={<LockOutlined />}
               type="password"
               placeholder="Contraseña"
+              value={userData.password}
               onChange={e =>
                 setUserData({ ...userData, password: e.target.value })
               }
@@ -226,6 +236,7 @@ function EditForm({ user, userData, setUserData, updateUser }) {
               prefix={<LockOutlined />}
               type="password"
               placeholder="Repetir contraseña"
+              value={userData.repeatPassword}
               onChange={e =>
                 setUserData({ ...userData, repeatPassword: e.target.value })
               }
