@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Switch, List, Button, Item, Avatar, notification } from "antd";
+import {
+  Switch,
+  List,
+  Button,
+  Item,
+  Avatar,
+  notification,
+  Modal as ModalAntd
+} from "antd";
 import NoAvatar from "../../../../assets/img/png/user.png";
-import { getAvatarApi, activateUserApi } from "../../../../api/user";
+import {
+  getAvatarApi,
+  activateUserApi,
+  deleteUserApi
+} from "../../../../api/user";
 import { getAccessTokenApi } from "../../../../api/auth";
 
 import {
@@ -15,6 +27,8 @@ import EditUserForm from "../EditUserForm";
 
 import "./ListUsers.scss";
 
+const { confirm } = ModalAntd;
+
 export default function ListUsers({
   usersActive,
   usersInactive,
@@ -24,6 +38,29 @@ export default function ListUsers({
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState(null);
+
+  const showDeleteConfirm = user => {
+    const accessToken = getAccessTokenApi();
+
+    confirm({
+      title: "eliminando el usuario",
+      content: `¿Estás seguro que quieres eliminar a ${user.email}`,
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "cancelar",
+      onOk() {
+        deleteUserApi(accessToken, user._id)
+          .then(response => {
+            notification["success"]({ message: response });
+
+            setReloadUsers(true);
+          })
+          .catch(err => {
+            notification["error"]({ message: err });
+          });
+      }
+    });
+  };
 
   return (
     <div className="list-users">
@@ -44,11 +81,13 @@ export default function ListUsers({
           setModalTitle={setModalTitle}
           setModalContent={setModalContent}
           setReloadUsers={setReloadUsers}
+          showDeleteConfirm={showDeleteConfirm}
         />
       ) : (
         <UsersInactive
           usersInactive={usersInactive}
           setReloadUsers={setReloadUsers}
+          showDeleteConfirm={showDeleteConfirm}
         />
       )}
       <Modal
@@ -67,7 +106,8 @@ function UsersActive({
   setIsVisibleModal,
   setModalTitle,
   setModalContent,
-  setReloadUsers
+  setReloadUsers,
+  showDeleteConfirm
 }) {
   const editUser = user => {
     setIsVisibleModal(true);
@@ -94,13 +134,14 @@ function UsersActive({
           user={user}
           editUser={editUser}
           setReloadUsers={setReloadUsers}
+          showDeleteConfirm={showDeleteConfirm}
         />
       )}
     />
   );
 }
 
-function UserActive({ user, editUser, setReloadUsers }) {
+function UserActive({ user, editUser, setReloadUsers, showDeleteConfirm }) {
   const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
@@ -139,7 +180,7 @@ function UserActive({ user, editUser, setReloadUsers }) {
         <Button type="danger" onClick={desactivateUser}>
           <StopOutlined />
         </Button>,
-        <Button type="danger" onClick={() => console.log("Desactivar Usuario")}>
+        <Button type="danger" onClick={() => showDeleteConfirm(user)}>
           <DeleteOutlined />
         </Button>
       ]}
@@ -155,20 +196,24 @@ function UserActive({ user, editUser, setReloadUsers }) {
   );
 }
 
-function UsersInactive({ usersInactive, setReloadUsers }) {
+function UsersInactive({ usersInactive, setReloadUsers, showDeleteConfirm }) {
   return (
     <List
       className="users-active"
       itemLayout="horizontal"
       dataSource={usersInactive}
       renderItem={user => (
-        <UserInactive user={user} setReloadUsers={setReloadUsers} />
+        <UserInactive
+          user={user}
+          setReloadUsers={setReloadUsers}
+          showDeleteConfirm={showDeleteConfirm}
+        />
       )}
     />
   );
 }
 
-function UserInactive({ user, setReloadUsers }) {
+function UserInactive({ user, setReloadUsers, showDeleteConfirm }) {
   const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
@@ -205,7 +250,12 @@ function UserInactive({ user, setReloadUsers }) {
           <CheckOutlined />
         </Button>,
 
-        <Button type="danger" onClick={() => console.log("Desactivar Usuario")}>
+        <Button
+          type="danger"
+          onClick={() => {
+            showDeleteConfirm(user);
+          }}
+        >
           <DeleteOutlined />
         </Button>
       ]}
