@@ -3,7 +3,6 @@ import {
   Switch,
   List,
   Button,
-  Item,
   Avatar,
   notification,
   Modal as ModalAntd
@@ -15,7 +14,7 @@ import {
   deleteUserApi
 } from "../../../../api/user";
 import { getAccessTokenApi } from "../../../../api/auth";
-
+import AddUserForm from "../AddUserForm";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -38,6 +37,17 @@ export default function ListUsers({
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState(null);
+
+  const addUserModal = () => {
+    setIsVisibleModal(true);
+    setModalTitle("Creando nuevo usuario");
+    setModalContent(
+      <AddUserForm
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadUsers={setReloadUsers}
+      />
+    );
+  };
 
   const showDeleteConfirm = user => {
     const accessToken = getAccessTokenApi();
@@ -64,15 +74,22 @@ export default function ListUsers({
 
   return (
     <div className="list-users">
-      <div className="list-users__switch">
-        <Switch
-          defaultChecked
-          onChange={() => setViewUsersActives(!viewUsersActives)}
-        ></Switch>
-        <span>
-          {viewUsersActives ? "Usuarios Activos" : "Usuarios Inactivos"}
-        </span>
+      <div className="list-users__header">
+        {" "}
+        <div className="list-users__header-switch">
+          <Switch
+            defaultChecked
+            onChange={() => setViewUsersActives(!viewUsersActives)}
+          ></Switch>
+          <span>
+            {viewUsersActives ? "Usuarios Activos" : "Usuarios Inactivos"}
+          </span>
+        </div>
+        <Button type="primary" onClick={addUserModal}>
+          Nuevo usuario
+        </Button>
       </div>
+
       {viewUsersActives ? (
         <UsersActive
           usersActive={usersActive}
@@ -187,7 +204,7 @@ function UserActive({ user, editUser, setReloadUsers, showDeleteConfirm }) {
     >
       <List.Item.Meta
         avatar={<Avatar src={avatar ? avatar : NoAvatar} />}
-        title={`${user.name ? user.name : "..."}${
+        title={`${user.name ? user.name : "..."} ${
           user.lastname ? user.lastname : "..."
         }`}
         description={user.email}
