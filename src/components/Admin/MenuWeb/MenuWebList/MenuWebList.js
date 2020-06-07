@@ -5,6 +5,7 @@ import DragSortableList from "react-drag-sortable";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { updateMenuApi, activateMenuApi } from "../../../../api/menu";
 import { getAccessTokenApi } from "../../../../api/auth";
+import AddMenuWebForm from "../AddMenuWebForm";
 
 import "./MenuWebList.scss";
 
@@ -23,6 +24,12 @@ export default function MenuWebList({ menu, setReloadMenuWeb }) {
       const order = item.rank;
       updateMenuApi(accessToken, _id, { order });
     });
+  };
+
+  const addMenuWebModal = () => {
+    setIsVisibleModal(true);
+    setModalTitle("Creando nuevo menú");
+    setModalContent(<AddMenuWebForm />);
   };
 
   useEffect(() => {
@@ -45,11 +52,20 @@ export default function MenuWebList({ menu, setReloadMenuWeb }) {
   return (
     <div className="menu-web-list">
       <div className="menu-web-list__header">
-        <Button type="primary">Menu</Button>
+        <Button type="primary" onClick={addMenuWebModal}>
+          Crear Menú
+        </Button>
       </div>
       <div className="menu-web-list__items">
         <DragSortableList items={listItems} onSort={onSort} type="vertical" />
       </div>
+      <Modal
+        title={modalTitle}
+        isVisible={isVisibleModal}
+        setIsVisible={setIsVisibleModal}
+      >
+        {modalContent}
+      </Modal>
     </div>
   );
 }
