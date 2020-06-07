@@ -6,6 +6,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { updateMenuApi, activateMenuApi } from "../../../../api/menu";
 import { getAccessTokenApi } from "../../../../api/auth";
 import AddMenuWebForm from "../AddMenuWebForm";
+import EditMenuWebForm from "../EditMenuWebForm";
 
 import "./MenuWebList.scss";
 
@@ -29,18 +30,42 @@ export default function MenuWebList({ menu, setReloadMenuWeb }) {
   const addMenuWebModal = () => {
     setIsVisibleModal(true);
     setModalTitle("Creando nuevo menú");
-    setModalContent(<AddMenuWebForm />);
+    setModalContent(
+      <AddMenuWebForm
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadMenuWeb={setReloadMenuWeb}
+      />
+    );
+  };
+
+  const editMenuWebModal = menu => {
+    setIsVisibleModal(true);
+    setModalTitle(`Editando menú: ${menu.title}`);
+    setModalContent(
+      <EditMenuWebForm
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadMenuWeb={setReloadMenuWeb}
+        menu={menu}
+      />
+    );
   };
 
   useEffect(() => {
     const listItemsArray = [];
     menu.forEach(item => {
       listItemsArray.push({
-        content: <MenuItem item={item} activateMenu={activateMenu} />
+        content: (
+          <MenuItem
+            item={item}
+            activateMenu={activateMenu}
+            editMenuWebModal={editMenuWebModal}
+          />
+        )
       });
     });
 
     setListItems(listItemsArray);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menu]);
 
   const activateMenu = (menu, status) => {
@@ -70,7 +95,7 @@ export default function MenuWebList({ menu, setReloadMenuWeb }) {
   );
 }
 
-function MenuItem({ item, activateMenu }) {
+function MenuItem({ item, activateMenu, editMenuWebModal }) {
   return (
     <List.Item
       actions={[
@@ -78,7 +103,7 @@ function MenuItem({ item, activateMenu }) {
           defaultChecked={item.active}
           onChange={e => activateMenu(item, e)}
         />,
-        <Button type="primary">
+        <Button type="primary" onClick={() => editMenuWebModal(item)}>
           <EditOutlined />
         </Button>,
         <Button type="danger">
