@@ -35,3 +35,24 @@ export function updateMenuApi(token, menuId, data) {
       return err.message;
     });
 }
+
+export function activateMenuApi(token, menuId, status) {
+  const url = `${basePath}/${apiVersion}/activate-menu/${menuId}`;
+
+  const params = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: token },
+    body: JSON.stringify({ active: status })
+  };
+
+  return fetch(url, params)
+    .then(response => {
+      return response.json();
+    })
+    .then(result => {
+      return result.message;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}

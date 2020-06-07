@@ -3,7 +3,7 @@ import { Switch, List, Button, Modal as ModalAntd, notification } from "antd";
 import Modal from "../../../Modal";
 import DragSortableList from "react-drag-sortable";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { updateMenuApi } from "../../../../api/menu";
+import { updateMenuApi, activateMenuApi } from "../../../../api/menu";
 import { getAccessTokenApi } from "../../../../api/auth";
 
 import "./MenuWebList.scss";
@@ -29,13 +29,19 @@ export default function MenuWebList({ menu, setReloadMenuWeb }) {
     const listItemsArray = [];
     menu.forEach(item => {
       listItemsArray.push({
-        content: <MenuItem item={item} />
+        content: <MenuItem item={item} activateMenu={activateMenu} />
       });
     });
 
     setListItems(listItemsArray);
   }, [menu]);
 
+  const activateMenu = (menu, status) => {
+    const accessToken = getAccessTokenApi();
+    activateMenuApi(accessToken, menu._id, status).then(response => {
+      notification["success"]({ message: response });
+    });
+  };
   return (
     <div className="menu-web-list">
       <div className="menu-web-list__header">
@@ -48,11 +54,14 @@ export default function MenuWebList({ menu, setReloadMenuWeb }) {
   );
 }
 
-function MenuItem({ item }) {
+function MenuItem({ item, activateMenu }) {
   return (
     <List.Item
       actions={[
-        <Switch defaultChecked={item.active} />,
+        <Switch
+          defaultChecked={item.active}
+          onChange={e => activateMenu(item, e)}
+        />,
         <Button type="primary">
           <EditOutlined />
         </Button>,
