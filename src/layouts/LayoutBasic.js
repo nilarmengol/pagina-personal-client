@@ -9,16 +9,19 @@ export default function LayoutBasic({ routes }) {
   const { Content, Footer } = Layout;
 
   return (
-    <Row>
-      <Col lg={4} />
-      <Col lg={16}>
-        <MenuTop />
-        <LoadRoutes routes={routes} />
-        <Footer>Nil-Edmon Armengol Tous</Footer>
-        <p>Footer</p>
-      </Col>
-      <Col lg={4} />
-    </Row>
+    <>
+      <Row>
+        <Col lg={4} />
+        <Col lg={16}>
+          <MenuTop />
+
+          <p>Footer</p>
+        </Col>
+        <Col lg={4} />
+      </Row>
+      <LoadRoutes routes={routes} />
+      <Footer>Nil-Edmon Armengol Tous</Footer>
+    </>
   );
   // return (
   //   <Layout>
