@@ -1,10 +1,9 @@
-import React from "react";
-import MainBanner from "../components/Web/MainBanner";
+import React from 'react'
 
 export default function Home() {
-  return (
-    <>
-      <MainBanner />
-    </>
-  );
+    return (
+        <div>
+            Estamos en Home
+        </div>
+    )
 }
