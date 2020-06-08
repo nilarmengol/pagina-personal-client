@@ -14,8 +14,6 @@ export default function LayoutBasic({ routes }) {
         <Col lg={4} />
         <Col lg={16}>
           <MenuTop />
-
-          <p>Footer</p>
         </Col>
         <Col lg={4} />
       </Row>

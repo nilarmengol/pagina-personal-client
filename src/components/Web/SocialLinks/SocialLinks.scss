@@ -5,29 +5,29 @@
   align-items: center;
   justify-content: flex-end;
   width: 100%;
-}
 
-a {
-  display: flex;
-  margin-right: 10px;
-  padding: 5px 8px;
-  border-radius: 5px;
+  a {
+    display: flex;
+    margin-right: 10px;
+    padding: 5px 8px;
+    border-radius: 5px;
 
-  &.youtube {
-    background-color: $youtube;
+    &.youtube {
+      background-color: $youtube;
+    }
+    &.twitter {
+      background-color: $twitter;
+    }
+    &.facebook {
+      background-color: $facebook;
+    }
+    &.linkedin {
+      background-color: $linkedin;
+    }
   }
-  &.twitter {
-    background-color: $twitter;
-  }
-  &.facebook {
-    background-color: $facebook;
-  }
-  &.linkedin {
-    background-color: $linkedin;
-  }
-}
 
-svg {
-  width: 15px;
-  height: 20px;
+  svg {
+    width: 15px;
+    height: 20px;
+  }
 }
