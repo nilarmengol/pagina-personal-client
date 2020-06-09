@@ -3,6 +3,7 @@ import { Row, Col, Layout } from "antd";
 import { Link } from "react-router-dom";
 import MyInfo from "./MyInfo";
 import NavigationFooter from "./NavigationFooter";
+import Newsletter from "../Newsletter";
 
 import "./Footer.scss";
 
@@ -20,7 +21,9 @@ export default function HomeCourses() {
             <Col md={8}>
               <NavigationFooter />
             </Col>
-            <Col md={8}>Newsletter</Col>
+            <Col md={8}>
+              <Newsletter />
+            </Col>
           </Row>
           <Row className="footer__copyright">
             <Col md={12}>© 2019 ALL RIGHTS RESERVED​</Col>
