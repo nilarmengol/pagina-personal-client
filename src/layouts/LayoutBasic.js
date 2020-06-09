@@ -2,12 +2,11 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import MenuTop from "../components/Web/MenuTop";
 import { Layout, Row, Col } from "antd";
+import Footer from "../components/Web/Footer";
 
 import "./LayoutAdmin.scss";
 
 export default function LayoutBasic({ routes }) {
-  const { Content, Footer } = Layout;
-
   return (
     <>
       <Row>
@@ -18,21 +17,9 @@ export default function LayoutBasic({ routes }) {
         <Col lg={4} />
       </Row>
       <LoadRoutes routes={routes} />
-      <Footer>Nil-Edmon Armengol Tous</Footer>
+      <Footer />
     </>
   );
-  // return (
-  //   <Layout>
-  //     <h2>Menu...</h2>
-  //
-  //     <Layout>
-  //       <Content>
-  //         <LoadRoutes routes={routes} />{" "}
-  //       </Content>
-  //       <Footer>Nil Armengol</Footer>
-  //     </Layout>
-  //   </Layout>
-  // );
 }
 
 function LoadRoutes({ routes }) {
