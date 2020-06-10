@@ -18,6 +18,7 @@ export function getRefreshTokenApi() {
   if (!refreshToken || refreshToken === "null") {
     return null;
   }
+
   return willExpireToken(refreshToken) ? null : refreshToken;
 }
 
@@ -33,13 +34,13 @@ export function refreshAccessTokenApi(refreshToken) {
       "Content-Type": "application/json"
     }
   };
+
   fetch(url, params)
     .then(response => {
       if (response.status !== 200) {
         return null;
-      } else {
-        return response.json();
       }
+      return response.json();
     })
     .then(result => {
       if (!result) {
@@ -58,8 +59,8 @@ export function logout() {
 }
 
 function willExpireToken(token) {
-  const metaToken = jwtDecode(token);
   const seconds = 60;
+  const metaToken = jwtDecode(token);
   const { exp } = metaToken;
   const now = (Date.now() + seconds) / 1000;
   return now > exp;
