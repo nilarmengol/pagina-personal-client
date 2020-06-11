@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { getCoursesApi } from "../../../../api/course";
+import {
+  getCoursesApi,
+  updateCourseApi,
+  deleteCourseApi
+} from "../../../../api/course";
 import { Switch, List, Button, Modal as ModalAntd, notification } from "antd";
 import DragSortableList from "react-drag-sortable";
 import Modal from "../../../Modal";
+import AddEditCourseForm from "../AddEditCourseForm";
 import { getAccessTokenApi } from "../../../../api/auth";
-import reactJsHooks from "../../../../assets/img/jpg/react-js-hooks.jpg";
 import reactNative from "../../../../assets/img/jpg/react-native.jpg";
 import javaScript from "../../../../assets/img/jpg/javascript-es6.jpg";
-import wordpress from "../../../../assets/img/jpg/wordpress.jpg";
-import prestaShop from "../../../../assets/img/jpg/prestashop-1-7.jpg";
-import cssGrid from "../../../../assets/img/jpg/css-grid.jpg";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import "./CoursesList.scss";
@@ -26,7 +27,13 @@ export default function CoursesList({ courses, setReloadCourses }) {
     const listCoursesArray = [];
     courses.forEach(course => {
       listCoursesArray.push({
-        content: <Course course={course} />
+        content: (
+          <Course
+            course={course}
+            deleteCourseModal={deleteCourseModal}
+            editCourseModal={editCourseModal}
+          />
+        )
       });
       setListCourses(listCoursesArray);
     });
@@ -35,17 +42,70 @@ export default function CoursesList({ courses, setReloadCourses }) {
 
   const onSort = (sortedList, dropEvent) => {
     const accessToken = getAccessTokenApi();
-
+    console.log("sortedList", sortedList);
     sortedList.forEach(item => {
-      const { _id } = item.content.props.item;
+      const { _id } = item.content.props.course;
       const order = item.rank;
+      updateCourseApi(accessToken, _id, { order });
+    });
+  };
+
+  const addCourseModal = () => {
+    setIsVisibleModal(true);
+    setModalTitle("Creando nuevos curso");
+    setModalContent(
+      <AddEditCourseForm
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadCourses={setReloadCourses}
+      />
+    );
+  };
+
+  const editCourseModal = course => {
+    setIsVisibleModal(true);
+    setModalTitle("Actualizando curso");
+    setModalContent(
+      <AddEditCourseForm
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadCourses={setReloadCourses}
+        course={course}
+      />
+    );
+  };
+
+  const deleteCourseModal = course => {
+    console.log(course._id);
+    const accessToken = getAccessTokenApi();
+
+    confirm({
+      title: "Eliminando curso",
+      content: `¿Estás seguro de que quieres eliminar el curso ${course.title}?`,
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        deleteCourseApi(accessToken, course._id)
+          .then(response => {
+            const typeNotification =
+              response.code === 200 ? "success" : "warning";
+            notification[typeNotification]({
+              message: response.message
+            });
+            setReloadCourses(true);
+          })
+          .catch(response => {
+            notification["error"]({
+              message: "Error del servidor, inténtelo más tarde"
+            });
+          });
+      }
     });
   };
 
   return (
     <div className="courses-list">
       <div className="courses-list__header">
-        <Button type="primary" onClick={() => console.log("s")}>
+        <Button type="primary" onClick={addCourseModal}>
           Nuevo curso
         </Button>
       </div>
@@ -57,19 +117,25 @@ export default function CoursesList({ courses, setReloadCourses }) {
         )}
         <DragSortableList items={listCourses} onSort={onSort} type="vertical" />
       </div>
+      <Modal
+        title={modalTitle}
+        isVisible={isVisibleModal}
+        setIsVisible={setIsVisibleModal}
+      >
+        {modalContent}
+      </Modal>
     </div>
   );
 }
 
-function Course({ course }) {
-  console.log("courses", course.image);
+function Course({ course, deleteCourseModal, editCourseModal }) {
   return (
     <List.Item
       actions={[
-        <Button type="primary" onClick={() => console.log("edit")}>
+        <Button type="primary" onClick={() => editCourseModal(course)}>
           <EditOutlined />
         </Button>,
-        <Button type="danger" onClick={() => console.log("delete")}>
+        <Button type="danger" onClick={() => deleteCourseModal(course)}>
           <DeleteOutlined />
         </Button>
       ]}

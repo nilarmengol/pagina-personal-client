@@ -15,8 +15,8 @@ export function getCoursesApi() {
     });
 }
 
-export function updateMenuApi(token, menuId, data) {
-  const url = `${basePath}/${apiVersion}/update-menu/${menuId}`;
+export function updateCourseApi(token, courseId, data) {
+  const url = `${basePath}/${apiVersion}/update-course/${courseId}`;
 
   const params = {
     method: "PUT",
@@ -29,41 +29,20 @@ export function updateMenuApi(token, menuId, data) {
       return response.json();
     })
     .then(result => {
-      return result.message;
+      return result;
     })
     .catch(err => {
-      return err.message;
+      return err;
     });
 }
 
-export function activateMenuApi(token, menuId, status) {
-  const url = `${basePath}/${apiVersion}/activate-menu/${menuId}`;
-
-  const params = {
-    method: "PUT",
-    headers: { "Content-Type": "application/json", Authorization: token },
-    body: JSON.stringify({ active: status })
-  };
-
-  return fetch(url, params)
-    .then(response => {
-      return response.json();
-    })
-    .then(result => {
-      return result.message;
-    })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
-export function addMenuApi(token, menu) {
-  const url = `${basePath}/${apiVersion}/add-menu`;
+export function addCourseApi(token, course) {
+  const url = `${basePath}/${apiVersion}/add-course`;
 
   const params = {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: token },
-    body: JSON.stringify(menu)
+    body: JSON.stringify(course)
   };
 
   return fetch(url, params)
@@ -71,15 +50,15 @@ export function addMenuApi(token, menu) {
       return response.json();
     })
     .then(result => {
-      return result.message;
+      return result;
     })
     .catch(err => {
       console.log(err);
     });
 }
 
-export function deleteMenuApi(token, menuId, menu) {
-  const url = `${basePath}/${apiVersion}/delete-menu/${menuId}`;
+export function deleteCourseApi(token, courseId) {
+  const url = `${basePath}/${apiVersion}/delete-course/${courseId}`;
 
   const params = {
     method: "DELETE",
@@ -91,7 +70,7 @@ export function deleteMenuApi(token, menuId, menu) {
       return response.json();
     })
     .then(result => {
-      return result.message;
+      return result;
     })
     .catch(err => {
       console.log(err);
