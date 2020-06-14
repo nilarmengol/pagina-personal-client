@@ -28,8 +28,9 @@ export default function EditUserForm({
   const [avatar, setAvatar] = useState(null);
   const [userData, setUserData] = useState({});
 
+  console.log("userData", userData);
+
   useEffect(() => {
-    console.log("hi");
     setUserData({
       ...userData,
       name: user.name,
@@ -43,8 +44,6 @@ export default function EditUserForm({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
-  console.log(userData);
 
   useEffect(() => {
     if (user.avatar) {
@@ -81,7 +80,7 @@ export default function EditUserForm({
 
     if (!userUpdate.name || !userUpdate.lastname || !userUpdate.email) {
       notification["error"]({
-        message: "El nombre, apellidosy email son obligatorios"
+        message: "El nombre, apellidos y email son obligatorios"
       });
 
       return;
@@ -90,6 +89,7 @@ export default function EditUserForm({
     if (typeof userUpdate.avatar === "object") {
       uploadAvatarApi(token, userUpdate.avatar, user._id).then(response => {
         userUpdate.avatar = response.avatarName;
+        console.log("userUpdate", userUpdate);
         updateUserApi(token, userUpdate, user._id).then(result => {
           notification["success"]({
             message: result.message

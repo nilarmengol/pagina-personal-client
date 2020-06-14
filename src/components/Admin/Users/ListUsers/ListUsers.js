@@ -53,7 +53,7 @@ export default function ListUsers({
     const accessToken = getAccessTokenApi();
 
     confirm({
-      title: "eliminando el usuario",
+      title: "Eliminando el usuario",
       content: `¿Estás seguro que quieres eliminar a ${user.email}`,
       okText: "Eliminar",
       okType: "danger",

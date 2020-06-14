@@ -76,3 +76,39 @@ export function deleteCourseApi(token, courseId) {
       console.log(err);
     });
 }
+
+export function uploadImageApi(token, image, courseId) {
+  const url = `${basePath}/${apiVersion}/upload-image-course/${courseId}`;
+
+  const formData = new FormData();
+  formData.append("image", image, image.name);
+  const params = {
+    method: "PUT",
+    body: formData,
+    headers: {
+      Authorization: token
+    }
+  };
+  return fetch(url, params)
+    .then(response => {
+      return response.json();
+    })
+    .then(result => {
+      return result;
+    })
+    .catch(err => {
+      return err.message;
+    });
+}
+
+export function getImageApi(imageName) {
+  const url = `${basePath}/${apiVersion}/get-image/${imageName}`;
+
+  return fetch(url)
+    .then(response => {
+      return response.url;
+    })
+    .catch(err => {
+      return err.message;
+    });
+}

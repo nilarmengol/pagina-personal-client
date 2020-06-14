@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
-  getCoursesApi,
   updateCourseApi,
-  deleteCourseApi
+  deleteCourseApi,
+  getImageApi
 } from "../../../../api/course";
 import { Switch, List, Button, Modal as ModalAntd, notification } from "antd";
 import DragSortableList from "react-drag-sortable";
 import Modal from "../../../Modal";
 import AddEditCourseForm from "../AddEditCourseForm";
 import { getAccessTokenApi } from "../../../../api/auth";
-import reactNative from "../../../../assets/img/jpg/react-native.jpg";
-import javaScript from "../../../../assets/img/jpg/javascript-es6.jpg";
+
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import "./CoursesList.scss";
@@ -129,6 +128,17 @@ export default function CoursesList({ courses, setReloadCourses }) {
 }
 
 function Course({ course, deleteCourseModal, editCourseModal }) {
+  const [image, setImage] = useState(null);
+  useEffect(() => {
+    if (course.image) {
+      getImageApi(course.image).then(response => {
+        setImage(response);
+      });
+    } else {
+      setImage(null);
+    }
+  }, [course]);
+
   return (
     <List.Item
       actions={[
@@ -141,7 +151,7 @@ function Course({ course, deleteCourseModal, editCourseModal }) {
       ]}
     >
       <img
-        src={javaScript}
+        src={image}
         alt="test"
         style={{ width: "100px", marginRight: "20px" }}
       />
