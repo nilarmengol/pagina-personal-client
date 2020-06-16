@@ -5,7 +5,8 @@ import {
   HomeOutlined,
   UserOutlined,
   MenuOutlined,
-  BookOutlined
+  BookOutlined,
+  MessageOutlined
 } from "@ant-design/icons";
 import "./MenuSider.scss";
 
@@ -43,6 +44,12 @@ function MenuSider({ menuCollapsed, location }) {
           <Link to={"/admin/courses"}>
             <BookOutlined />
             <span className="nav-text">Cursos</span>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="/admin/blog">
+          <Link to={"/admin/blog"}>
+            <MessageOutlined />
+            <span className="nav-text">Blog</span>
           </Link>
         </Menu.Item>
       </Menu>
